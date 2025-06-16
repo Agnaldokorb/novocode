@@ -59,9 +59,7 @@ export async function getOrCreateSiteConfig(): Promise<SiteConfig> {
   try {
     let config = await prisma.siteConfig.findFirst({
       orderBy: { updatedAt: "desc" },
-    });
-
-    const defaultData = {
+    });    const defaultData = {
       companyName: "NOVOCODE",
       companyDescription: "Tecnologia e Inovação para o seu negócio",
       companyMission:
@@ -81,6 +79,7 @@ export async function getOrCreateSiteConfig(): Promise<SiteConfig> {
       address: "Brusque, Santa Catarina, Brasil",
       socialLinkedin: "https://linkedin.com/company/novocode",
       socialGithub: "https://github.com/NovoCode-Tec",
+      logo: "https://gdgidcaflispcxwbqnjf.supabase.co/storage/v1/object/public/uploads/logo/novocode-logo.png",
       defaultMetaTitle: "NOVOCODE - Tecnologia e Inovação",
       defaultMetaDescription:
         "Desenvolvimento de sistemas web, aplicações mobile e soluções tecnológicas personalizadas para empresas de todos os portes.",

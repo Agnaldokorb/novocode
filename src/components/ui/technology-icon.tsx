@@ -21,9 +21,7 @@ function isValidUrl(url: string): boolean {
 
   try {
     const urlObj = new URL(url);
-    const isHttp = url.startsWith("http") || url.startsWith("https");
-
-    // Lista de domínios permitidos
+    const isHttp = url.startsWith("http") || url.startsWith("https");    // Lista de domínios permitidos
     const allowedDomains = [
       "supabase.co",
       "cdn.jsdelivr.net",
@@ -31,6 +29,7 @@ function isValidUrl(url: string): boolean {
       "devicons.github.io",
       "unpkg.com",
       "cdnjs.cloudflare.com",
+      "skillicons.dev",
     ];
 
     const isAllowedDomain = allowedDomains.some((domain) =>

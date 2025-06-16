@@ -26,25 +26,25 @@ export function SiteHeaderClient({ companyName, logo }: SiteHeaderClientProps) {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 h-20 flex items-center justify-between">
-        {" "}
-        {/* Logo */}{" "}
-        <Link href="/" className="flex items-center justify-center">
-          {logo ? (
-            <div className="relative w-16 h-16">
-              <OptimizedImage
-                src={logo}
-                alt={`${companyName} Logo`}
-                fill
-                sizes="64px"
-                className="object-contain object-center"
-              />
-            </div>
-          ) : (
-            <div className="relative">
-              <Code className="h-16 w-16 text-primary" />
-              <div className="absolute -top-1 -right-1 h-5 w-5 bg-primary rounded-full animate-pulse" />
-            </div>
-          )}
+        {/* Logo */}
+        <Link href="/" className="flex items-center space-x-3">
+          <div className="relative w-12 h-12">
+            <OptimizedImage
+              src={logo || "/novocode-logo.svg"}
+              alt={`${companyName} Logo`}
+              fill
+              sizes="48px"
+              className="object-contain object-center"
+              fallbackIcon={true}
+              onError={() => {
+                console.log('⚠️ Erro ao carregar logo:', logo || "/novocode-logo.svg");
+              }}
+            />
+          </div>
+          <div className="flex flex-col">
+            <span className="font-bold text-xl text-primary">{companyName}</span>
+            <span className="text-xs text-muted-foreground">Desenvolvimento Web</span>
+          </div>
         </Link>
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6">
