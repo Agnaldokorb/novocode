@@ -1,0 +1,334 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String      @id @default(cuid())
+  email             String      @unique
+  name              String?
+  avatar            String?
+  role              UserRole    @default(ADMIN)
+  isActive          Boolean     @default(true)
+  lastLoginAt       DateTime?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  createdPosts      BlogPost[]  @relation("PostCreatedBy")
+  updatedPosts      BlogPost[]  @relation("PostUpdatedBy")
+  createdPortfolios Portfolio[] @relation("PortfolioCreatedBy")
+  updatedPortfolios Portfolio[] @relation("PortfolioUpdatedBy")
+  createdServices   Service[]   @relation("ServiceCreatedBy")
+  updatedServices   Service[]   @relation("ServiceUpdatedBy")
+
+  @@map("users")
+}
+
+model Service {
+  id               String            @id @default(cuid())
+  title            String
+  slug             String            @unique
+  shortDescription String
+  description      String
+  price            Decimal?
+  priceDescription String?
+  type             ServiceType
+  status           PublicationStatus @default(DRAFT)
+  featured         Boolean           @default(false)
+  order            Int?
+  metaTitle        String?
+  metaDescription  String?
+  keywords         String[]          @default([])
+  thumbnail        String?
+  gallery          String[]          @default([])
+  features         String[]          @default([])
+  benefits         String[]          @default([])
+  deliverables     String[]          @default([])
+  createdBy        String
+  updatedBy        String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  portfolioItems   Portfolio[]       @relation("ServicePortfolios")
+  createdByUser    User              @relation("ServiceCreatedBy", fields: [createdBy], references: [id])
+  updatedByUser    User?             @relation("ServiceUpdatedBy", fields: [updatedBy], references: [id])
+  technologies     Technology[]      @relation("ServiceTechnologies")
+
+  @@map("services")
+}
+
+model Technology {
+  id             String             @id @default(cuid())
+  name           String             @unique
+  slug           String             @unique
+  description    String?
+  category       TechnologyCategory
+  icon           String?
+  color          String?
+  website        String?
+  isActive       Boolean            @default(true)
+  order          Int?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  portfolioItems Portfolio[]        @relation("PortfolioTechnologies")
+  services       Service[]          @relation("ServiceTechnologies")
+
+  @@map("technologies")
+}
+
+model Portfolio {
+  id                String            @id @default(cuid())
+  title             String
+  slug              String            @unique
+  shortDescription  String
+  description       String
+  challenge         String?
+  solution          String?
+  results           String?
+  serviceId         String?
+  status            ProjectStatus     @default(COMPLETED)
+  publicationStatus PublicationStatus @default(DRAFT)
+  startDate         DateTime?
+  endDate           DateTime?
+  featured          Boolean           @default(false)
+  order             Int?
+  clientName        String?
+  clientLogo        String?
+  clientWebsite     String?
+  testimonial       String?
+  metaTitle         String?
+  metaDescription   String?
+  keywords          String[]          @default([])
+  thumbnail         String?
+  gallery           String[]          @default([])
+  liveUrl           String?
+  repositoryUrl     String?
+  teamSize          Int?
+  duration          String?
+  complexity        String?
+  createdBy         String
+  updatedBy         String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  createdByUser     User              @relation("PortfolioCreatedBy", fields: [createdBy], references: [id])
+  service           Service?          @relation("ServicePortfolios", fields: [serviceId], references: [id])
+  updatedByUser     User?             @relation("PortfolioUpdatedBy", fields: [updatedBy], references: [id])
+  technologies      Technology[]      @relation("PortfolioTechnologies")
+
+  @@map("portfolio")
+}
+
+model BlogPost {
+  id              String            @id @default(cuid())
+  title           String
+  slug            String            @unique
+  excerpt         String
+  content         String
+  category        String
+  tags            String[]          @default([])
+  status          PublicationStatus @default(DRAFT)
+  featured        Boolean           @default(false)
+  publishedAt     DateTime?
+  metaTitle       String?
+  metaDescription String?
+  keywords        String[]          @default([])
+  thumbnail       String?
+  views           Int               @default(0)
+  readingTime     Int?
+  createdBy       String
+  updatedBy       String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  comments        BlogComment[]     @relation("BlogPostComments")
+  createdByUser   User              @relation("PostCreatedBy", fields: [createdBy], references: [id])
+  updatedByUser   User?             @relation("PostUpdatedBy", fields: [updatedBy], references: [id])
+
+  @@map("blog_posts")
+}
+
+model SiteConfig {
+  id                     String   @id @default(cuid())
+  companyName            String   @default("NOVOCODE TECNOLOGIA E SISTEMAS LTDA")
+  companyDescription     String?
+  companyMission         String?
+  companyVision          String?
+  companyValues          String[] @default([])
+  email                  String?
+  phone                  String?
+  whatsapp               String?
+  address                String?
+  socialFacebook         String?
+  socialInstagram        String?
+  socialLinkedin         String?
+  socialTwitter          String?
+  socialGithub           String?
+  defaultMetaTitle       String?
+  defaultMetaDescription String?
+  defaultKeywords        String[] @default([])
+  logo                   String?
+  favicon                String?
+  primaryColor           String?
+  secondaryColor         String?
+  maintenanceMode        Boolean  @default(false)
+  allowRegistration      Boolean  @default(false)
+  googleAnalyticsId      String?
+  facebookPixelId        String?
+  updatedAt              DateTime @updatedAt
+  createdAt              DateTime @default(now())
+
+  @@map("site_config")
+}
+
+model Lead {
+  id                 String     @id @default(cuid())
+  name               String
+  email              String
+  phone              String?
+  company            String?
+  message            String
+  source             String?
+  status             LeadStatus @default(NEW)
+  interestedServices String[]   @default([])
+  budget             String?
+  timeline           String?
+  testimonialEmailSentAt DateTime?
+  testimonialToken   String?
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  testimonials       Testimonial[]
+
+  @@map("leads")
+}
+
+model Testimonial {
+  id                String            @id @default(cuid())
+  clientName        String
+  clientEmail       String
+  clientPosition    String?
+  clientCompany     String?
+  clientAvatar      String?
+  content           String?
+  rating            Int?
+  featured          Boolean           @default(false)
+  leadId            String?
+  portfolioId       String?
+  serviceId         String?
+  requestToken      String            @unique
+  requestSentAt     DateTime?
+  submittedAt       DateTime?
+  reminderSentAt    DateTime?
+  reminderCount     Int               @default(0)
+  status            TestimonialStatus @default(PENDING)
+  publicationStatus PublicationStatus @default(DRAFT)
+  order             Int?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  lead              Lead?             @relation(fields: [leadId], references: [id])
+
+  @@map("testimonials")
+}
+
+model FAQ {
+  id        String            @id @default(cuid())
+  question  String
+  answer    String
+  category  String?
+  order     Int?
+  status    PublicationStatus @default(PUBLISHED)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  @@map("faqs")
+}
+
+model BlogComment {
+  id         String   @id @default(cuid())
+  postId     String
+  name       String
+  content    String
+  rating     Int
+  createdAt  DateTime @default(now())
+  isApproved Boolean  @default(false)
+  post       BlogPost @relation("BlogPostComments", fields: [postId], references: [id])
+
+  @@map("blog_comments")
+}
+
+enum PublicationStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ServiceType {
+  DEVELOPMENT
+  CONSULTING
+  MAINTENANCE
+  AUTOMATION
+  MOBILE
+  WEB
+  API
+  INTEGRATION
+}
+
+enum TechnologyCategory {
+  FRONTEND
+  BACKEND
+  DATABASE
+  MOBILE
+  CLOUD
+  DEVOPS
+  OTHER
+  NOCODE
+  AI
+  BLOCKCHAIN
+  IOT
+  SECURITY
+  DESIGN
+  MARKETING
+  ANALYTICS
+  CRM
+  ERP
+  ECOMMERCE
+}
+
+enum ProjectStatus {
+  PLANNING
+  DEVELOPMENT
+  TESTING
+  DEPLOYED
+  COMPLETED
+  PAUSED
+  CANCELLED
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  DOCUMENT
+  LOGO
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  PROPOSAL
+  WON
+  LOST
+}
+
+enum TestimonialStatus {
+  PENDING
+  SUBMITTED
+  APPROVED
+  REJECTED
+}
