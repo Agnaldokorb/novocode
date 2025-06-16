@@ -3,11 +3,5 @@
   "installCommand": "npm install",
   "env": {
     "SKIP_ENV_VALIDATION": "1"
-  },
-  "functions": {
-    "app/**/*.ts": {
-      "runtime": "nodejs20.x"
-    }
-  },
-  "crons": []
+  }
 }
