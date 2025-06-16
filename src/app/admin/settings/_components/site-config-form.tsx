@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -42,7 +42,6 @@ export function SiteConfigForm({ initialData }: SiteConfigFormProps) {
   const [newKeyword, setNewKeyword] = useState("");
   const [logo, setLogo] = useState<string>(initialData.logo || "");
   const [favicon, setFavicon] = useState<string>(initialData.favicon || "");
-
   const {
     register,
     handleSubmit,
@@ -70,13 +69,46 @@ export function SiteConfigForm({ initialData }: SiteConfigFormProps) {
       favicon: initialData.favicon || "",
       primaryColor: initialData.primaryColor || "",
       secondaryColor: initialData.secondaryColor || "",
-      maintenanceMode: initialData.maintenanceMode || false,
-      allowRegistration: initialData.allowRegistration || false,
+      maintenanceMode: Boolean(initialData.maintenanceMode),
+      allowRegistration: Boolean(initialData.allowRegistration),
+      googleAnalyticsId: initialData.googleAnalyticsId || "",
+      facebookPixelId: initialData.facebookPixelId || "",
     },
   });
 
   const maintenanceMode = watch("maintenanceMode");
   const allowRegistration = watch("allowRegistration");
+  // Force update form values when initialData changes
+  useEffect(() => {
+    setValue("companyDescription", initialData.companyDescription || "");
+    setValue("companyMission", initialData.companyMission || "");
+    setValue("companyVision", initialData.companyVision || "");
+    setValue("email", initialData.email || "");
+    setValue("phone", initialData.phone || "");
+    setValue("whatsapp", initialData.whatsapp || "");
+    setValue("address", initialData.address || "");
+    setValue("socialFacebook", initialData.socialFacebook || "");
+    setValue("socialInstagram", initialData.socialInstagram || "");
+    setValue("socialLinkedin", initialData.socialLinkedin || "");
+    setValue("socialTwitter", initialData.socialTwitter || "");
+    setValue("socialGithub", initialData.socialGithub || "");
+    setValue("defaultMetaTitle", initialData.defaultMetaTitle || "");
+    setValue("defaultMetaDescription", initialData.defaultMetaDescription || "");
+    setValue("logo", initialData.logo || "");
+    setValue("favicon", initialData.favicon || "");
+    setValue("primaryColor", initialData.primaryColor || "");
+    setValue("secondaryColor", initialData.secondaryColor || "");
+    setValue("maintenanceMode", Boolean(initialData.maintenanceMode));
+    setValue("allowRegistration", Boolean(initialData.allowRegistration));
+    setValue("googleAnalyticsId", initialData.googleAnalyticsId || "");
+    setValue("facebookPixelId", initialData.facebookPixelId || "");
+    
+    setCompanyValues(initialData.companyValues || []);
+    setKeywords(initialData.defaultKeywords || []);
+    setLogo(initialData.logo || "");
+    setFavicon(initialData.favicon || "");
+  }, [initialData, setValue]);
+
   const handleFormSubmit = async (data: UpdateSiteConfigInput) => {
     setIsSubmitting(true);
     try {

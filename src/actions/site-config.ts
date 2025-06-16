@@ -61,51 +61,87 @@ export async function getOrCreateSiteConfig(): Promise<SiteConfig> {
       orderBy: { updatedAt: "desc" },
     });
 
+    const defaultData = {
+      companyName: "NOVOCODE",
+      companyDescription: "Tecnologia e Inovação para o seu negócio",
+      companyMission:
+        "Transformar ideias em soluções digitais inovadoras que impulsionam o crescimento dos nossos clientes.",
+      companyVision:
+        "Ser referência em desenvolvimento de software e consultoria tecnológica, criando soluções que fazem a diferença.",
+      companyValues: [
+        "Inovação",
+        "Qualidade",
+        "Transparência",
+        "Compromisso",
+        "Excelência",
+      ],
+      email: "novocode.tec@gmail.com",
+      phone: "(47) 98881-5799",
+      whatsapp: "5547988815799",
+      address: "Brusque, Santa Catarina, Brasil",
+      socialLinkedin: "https://linkedin.com/company/novocode",
+      socialGithub: "https://github.com/NovoCode-Tec",
+      defaultMetaTitle: "NOVOCODE - Tecnologia e Inovação",
+      defaultMetaDescription:
+        "Desenvolvimento de sistemas web, aplicações mobile e soluções tecnológicas personalizadas para empresas de todos os portes.",
+      defaultKeywords: [
+        "desenvolvimento web",
+        "sistemas web",
+        "aplicativos mobile",
+        "consultoria tecnológica",
+        "desenvolvimento de software",
+        "React",
+        "Next.js",
+        "Node.js",
+        "Brusque",
+        "Santa Catarina",
+      ],
+      primaryColor: "#3b82f6",
+      secondaryColor: "#8b5cf6",
+      maintenanceMode: false,
+      allowRegistration: false,
+    };
+
     if (!config) {
       // Criar configurações padrão
       config = await prisma.siteConfig.create({
-        data: {
-          companyName: "NOVOCODE",
-          companyDescription: "Tecnologia e Inovação para o seu negócio",
-          companyMission:
-            "Transformar ideias em soluções digitais inovadoras que impulsionam o crescimento dos nossos clientes.",
-          companyVision:
-            "Ser referência em desenvolvimento de software e consultoria tecnológica, criando soluções que fazem a diferença.",
-          companyValues: [
-            "Inovação",
-            "Qualidade",
-            "Transparência",
-            "Compromisso",
-            "Excelência",
-          ],
-          email: "novocode.tec@gmail.com",
-          phone: "(47) 98881-5799",
-          whatsapp: "5547988815799",
-          address: "Brusque, Santa Catarina, Brasil",
-          socialLinkedin: "https://linkedin.com/company/novocode",
-          socialGithub: "https://github.com/NovoCode-Tec",
-          defaultMetaTitle: "NOVOCODE - Tecnologia e Inovação",
-          defaultMetaDescription:
-            "Desenvolvimento de sistemas web, aplicações mobile e soluções tecnológicas personalizadas para empresas de todos os portes.",
-          defaultKeywords: [
-            "desenvolvimento web",
-            "sistemas web",
-            "aplicativos mobile",
-            "consultoria tecnológica",
-            "desenvolvimento de software",
-            "React",
-            "Next.js",
-            "Node.js",
-            "Brusque",
-            "Santa Catarina",
-          ],
-          primaryColor: "#3b82f6",
-          secondaryColor: "#8b5cf6",
-          maintenanceMode: false,
-          allowRegistration: false,
-        },
+        data: defaultData,
       });
-    }
+    } else {
+      // Verificar se a configuração existente precisa ser atualizada com valores padrão
+      const needsUpdate = 
+        !config.companyDescription ||
+        !config.email ||
+        !config.phone ||
+        !config.defaultMetaTitle ||
+        config.companyValues.length === 0 ||
+        config.defaultKeywords.length === 0;
+
+      if (needsUpdate) {
+        // Atualizar campos vazios com valores padrão, mantendo valores existentes
+        const updateData: any = {};
+        
+        if (!config.companyDescription) updateData.companyDescription = defaultData.companyDescription;
+        if (!config.companyMission) updateData.companyMission = defaultData.companyMission;
+        if (!config.companyVision) updateData.companyVision = defaultData.companyVision;
+        if (config.companyValues.length === 0) updateData.companyValues = defaultData.companyValues;
+        if (!config.email) updateData.email = defaultData.email;
+        if (!config.phone) updateData.phone = defaultData.phone;
+        if (!config.whatsapp) updateData.whatsapp = defaultData.whatsapp;
+        if (!config.address) updateData.address = defaultData.address;
+        if (!config.socialLinkedin) updateData.socialLinkedin = defaultData.socialLinkedin;
+        if (!config.socialGithub) updateData.socialGithub = defaultData.socialGithub;
+        if (!config.defaultMetaTitle) updateData.defaultMetaTitle = defaultData.defaultMetaTitle;
+        if (!config.defaultMetaDescription) updateData.defaultMetaDescription = defaultData.defaultMetaDescription;
+        if (config.defaultKeywords.length === 0) updateData.defaultKeywords = defaultData.defaultKeywords;
+        if (!config.primaryColor) updateData.primaryColor = defaultData.primaryColor;
+        if (!config.secondaryColor) updateData.secondaryColor = defaultData.secondaryColor;
+
+        config = await prisma.siteConfig.update({
+          where: { id: config.id },
+          data: updateData,
+        });
+      }    }
 
     return config;
   } catch (error) {

@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import AdminHeader from "@/components/admin/header";
 import AdminSidebar from "@/components/admin/sidebar";
 import { MaintenanceBanner } from "@/components/maintenance-banner";
+import { MaintenanceWrapper } from "@/components/maintenance-wrapper";
 import { Toaster } from "@/components/ui/sonner";
 
 interface AdminLayoutProps {
@@ -20,22 +21,20 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    console.log(
-      "❌ Usuário não autenticado no Supabase Auth - redirecionando para login"
+    console.log(      "❌ Usuário não autenticado no Supabase Auth - redirecionando para login"
     );
     redirect("/login");
   }
 
-  console.log("✅ Usuário autenticado no Supabase Auth:", user.email);
+  console.log("✅ Usuário autenticado no Supabase Auth");
 
   // Buscar dados do usuário na tabela
   const { data: userData, error } = await supabase
     .from("users")
-    .select("id, email, name, role, isActive")
-    .eq("email", user.email)
+    .select("id, email, name, role, isActive")    .eq("email", user.email)
     .single();
 
-  console.log("🔍 Resultado da busca na tabela users:", { userData, error });
+  console.log("🔍 Verificando dados do usuário na tabela");
 
   if (error) {
     console.log(
@@ -62,24 +61,24 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
       userData.role,
       "- redirecionando para login"
     );
-    redirect("/login");
-  }
-  console.log("🎉 Acesso ao painel admin autorizado para:", userData.email);
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <AdminSidebar />
-      <div className="md:pl-64">
-        <AdminHeader
-          userEmail={userData.email}
-          userName={userData.name || undefined}
-        />
-        {/* Banner de manutenção */}
-        <div className="p-4 pb-0">
-          <MaintenanceBanner />
+    redirect("/login");  }
+  console.log("🎉 Acesso ao painel admin autorizado");  return (
+    <MaintenanceWrapper allowDuringMaintenance={true}>
+      <div className="min-h-screen bg-gray-50">
+        <AdminSidebar />
+        <div className="md:pl-64">
+          <AdminHeader
+            userEmail={userData.email}
+            userName={userData.name || undefined}
+          />
+          {/* Banner de manutenção */}
+          <div className="p-4 pb-0">
+            <MaintenanceBanner />
+          </div>
+          <main className="flex-1">{children}</main>
         </div>
-        <main className="flex-1">{children}</main>
+        <Toaster position="top-center" richColors />
       </div>
-      <Toaster position="top-center" richColors />
-    </div>
+    </MaintenanceWrapper>
   );
 }

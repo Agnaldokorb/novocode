@@ -10,14 +10,12 @@ export async function getCurrentUser(): Promise<User | null> {
     // Pegar usuário autenticado no Supabase Auth
     const {
       data: { user: authUser },
-    } = await supabase.auth.getUser();
-
-    if (!authUser) {
+    } = await supabase.auth.getUser();    if (!authUser) {
       console.log("❌ Nenhum usuário autenticado no Supabase Auth");
       return null;
     }
 
-    console.log("✅ Usuário autenticado no Supabase Auth:", authUser.email);
+    console.log("✅ Usuário autenticado no Supabase Auth");
 
     // Buscar dados do usuário na tabela
     const { data: userData, error } = await supabase
@@ -33,16 +31,9 @@ export async function getCurrentUser(): Promise<User | null> {
 
     if (!userData) {
       console.log("❌ Usuário não encontrado na tabela users");
-      return null;
-    }
+      return null;    }
 
-    console.log("✅ Usuário encontrado na tabela:", {
-      id: userData.id,
-      email: userData.email,
-      name: userData.name,
-      role: userData.role,
-      isActive: userData.isActive,
-    });
+    console.log("✅ Usuário encontrado na tabela");
 
     return userData as User;
   } catch (error) {

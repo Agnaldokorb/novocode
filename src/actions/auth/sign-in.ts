@@ -9,7 +9,7 @@ export async function signIn(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
-  console.log("🔐 Tentativa de login para:", email);
+  console.log("🔐 Tentativa de login");
 
   try {
     const supabase = await createSupabaseServerClient();
@@ -25,7 +25,7 @@ export async function signIn(formData: FormData) {
       return { error: "Credenciais inválidas" };
     }
 
-    console.log("✅ Login no Supabase Auth bem-sucedido para:", email);
+    console.log("✅ Login no Supabase Auth bem-sucedido");
 
     // TEMPORÁRIO: Pular verificação da tabela users devido a problemas de permissão
     if (email === "agnaldokorb@gmail.com") {

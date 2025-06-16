@@ -13,7 +13,7 @@ async function createAdminUser() {
     });
 
     if (existingAdmin) {
-      console.log("✅ Usuário admin já existe:", existingAdmin.email);
+      // Email log removed for security
       return;
     }
 
@@ -33,7 +33,7 @@ async function createAdminUser() {
     });
 
     console.log("✅ Usuário admin criado com sucesso!");
-    console.log("📧 Email:", adminUser.email);
+    // Email log removed for security
     console.log("🔑 Senha:", password);
     console.log("⚠️  IMPORTANTE: Altere a senha após o primeiro login!");
   } catch (error) {

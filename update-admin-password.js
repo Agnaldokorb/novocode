@@ -24,7 +24,7 @@ async function updateAdminPassword() {
     });
 
     console.log("✅ Usuário admin atualizado com sucesso!");
-    console.log("📧 Email:", updatedUser.email);
+    // Email log removed for security
     console.log("👤 Nome:", updatedUser.name);
     console.log("🔑 Role:", updatedUser.role);
     console.log("🔐 Nova senha:", password);
@@ -50,7 +50,7 @@ async function updateAdminPassword() {
         });
 
         console.log("✅ Novo usuário admin criado!");
-        console.log("📧 Email:", newUser.email);
+        // Email log removed for security
         console.log("🔐 Senha:", password);
       } catch (createError) {
         console.error("❌ Erro ao criar usuário:", createError.message);

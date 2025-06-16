@@ -17,13 +17,10 @@ async function checkAdminUser() {
     }
 
     console.log("✅ Usuário admin encontrado:");
-    console.log("📧 Email:", adminUser.email);
+    // Email log removed for security
     console.log("👤 Nome:", adminUser.name);
     console.log("🔑 Role:", adminUser.role);
-    console.log(
-      "✉️ Email verificado:",
-      adminUser.emailVerified ? "Sim" : "Não"
-    );
+    // Email log removed for security
     console.log("📅 Criado em:", adminUser.createdAt);
 
     // Testar senha
