@@ -1,22 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NovoCode - Site Institucional
 
-## Getting Started
+Este é um projeto Next.js 15 com Prisma, Supabase e TypeScript.
 
-First, run the development server:
+## 🚀 Getting Started
 
+### Pré-requisitos
+- Node.js 18+ 
+- npm ou pnpm
+- Conta no Supabase
+
+### Instalação Local
+
+1. Clone o repositório
+2. Instale as dependências:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Configure as variáveis de ambiente criando um arquivo `.env.local` baseado no `.env.example`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+4. Execute o desenvolvimento:
+```bash
+npm run dev
+```
+
+### 📦 Build para Produção
+
+```bash
+npm run build
+```
+
+### 🚀 Deploy na Vercel
+
+O projeto está configurado para deploy automático na Vercel. As seguintes variáveis de ambiente devem ser configuradas:
+
+**Essenciais:**
+- `DATABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `NEXTAUTH_SECRET`
+- `NEXTAUTH_URL`
+- `NEXT_PUBLIC_APP_URL`
+
+**Opcionais (SMTP):**
+- `BREVO_SMTP_USER`
+- `BREVO_SMTP_PASSWORD`
+- `BREVO_FROM_EMAIL`
+
+### 🛠 Scripts Disponíveis
+
+- `npm run dev` - Desenvolvimento
+- `npm run build` - Build para produção  
+- `npm run start` - Inicia servidor de produção
+- `npm run lint` - Executa linting
+
+### 📋 Stack Tecnológica
+
+- **Frontend**: Next.js 15, React 19, TypeScript
+- **Banco de Dados**: PostgreSQL (Supabase)
+- **ORM**: Prisma
+- **Auth**: Supabase Auth com @supabase/ssr
+- **Styling**: Tailwind CSS
+- **Components**: Radix UI
+- **Forms**: React Hook Form + Zod
+- **Email**: Brevo (SendinBlue)
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
