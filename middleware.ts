@@ -8,6 +8,34 @@ export async function middleware(request: NextRequest) {
 
   console.log("🛡️ Middleware executando para:", request.nextUrl.pathname);
 
+  // Verificar modo de manutenção primeiro
+  const { data: siteConfig } = await supabase
+    .from("site_config")
+    .select("maintenanceMode")
+    .single();
+
+  const isMaintenanceMode = siteConfig?.maintenanceMode || false;
+
+  // Rotas que ficam acessíveis durante manutenção
+  const maintenanceAllowedRoutes = [
+    "/admin",
+    "/login", 
+    "/maintenance",
+    "/api",
+    "/_next",
+    "/favicon.ico"
+  ];
+
+  const isMaintenanceAllowed = maintenanceAllowedRoutes.some((route) =>
+    request.nextUrl.pathname.startsWith(route)
+  );
+
+  // Se está em modo manutenção e tentando acessar rota não permitida
+  if (isMaintenanceMode && !isMaintenanceAllowed) {
+    console.log("🚧 Redirecionando para página de manutenção");
+    return NextResponse.redirect(new URL("/maintenance", request.url));
+  }
+
   // Rotas que precisam de autenticação
   const protectedRoutes = ["/admin"];
   const authRoutes = ["/login"];

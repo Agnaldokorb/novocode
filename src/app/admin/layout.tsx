@@ -3,6 +3,7 @@ import { createSupabaseServerClient } from "@/lib/supabase";
 import { redirect } from "next/navigation";
 import AdminHeader from "@/components/admin/header";
 import AdminSidebar from "@/components/admin/sidebar";
+import { MaintenanceBanner } from "@/components/maintenance-banner";
 import { Toaster } from "@/components/ui/sonner";
 
 interface AdminLayoutProps {
@@ -63,7 +64,6 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
     );
     redirect("/login");
   }
-
   console.log("🎉 Acesso ao painel admin autorizado para:", userData.email);
   return (
     <div className="min-h-screen bg-gray-50">
@@ -73,6 +73,10 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
           userEmail={userData.email}
           userName={userData.name || undefined}
         />
+        {/* Banner de manutenção */}
+        <div className="p-4 pb-0">
+          <MaintenanceBanner />
+        </div>
         <main className="flex-1">{children}</main>
       </div>
       <Toaster position="top-center" richColors />

@@ -516,32 +516,57 @@ export function SiteConfigForm({ initialData }: SiteConfigFormProps) {
           <CardDescription>
             Configure opções avançadas do sistema
           </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="maintenanceMode"
-              checked={maintenanceMode}
-              onCheckedChange={(checked) =>
-                setValue("maintenanceMode", !!checked)
-              }
-            />
-            <Label htmlFor="maintenanceMode" className="text-sm font-medium">
-              Modo de manutenção
-            </Label>
+        </CardHeader>        <CardContent className="space-y-6">
+          <div className="space-y-3">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="maintenanceMode"
+                checked={maintenanceMode}
+                onCheckedChange={(checked) =>
+                  setValue("maintenanceMode", !!checked)
+                }
+              />
+              <Label htmlFor="maintenanceMode" className="text-sm font-medium">
+                Modo de manutenção
+              </Label>
+            </div>
+            {maintenanceMode && (
+              <div className="ml-6 p-3 bg-orange-50 border border-orange-200 rounded-md">
+                <div className="flex items-start space-x-2">
+                  <div className="w-4 h-4 mt-0.5 text-orange-500">
+                    ⚠️
+                  </div>
+                  <div className="text-sm text-orange-700">
+                    <p className="font-medium mb-1">Site em modo de manutenção</p>
+                    <p>
+                      Quando ativo, apenas administradores podem acessar o site. 
+                      Visitantes verão uma página de manutenção.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+            <p className="text-xs text-gray-500 ml-6">
+              Ative para realizar manutenções no site sem interromper o acesso administrativo
+            </p>
           </div>
 
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="allowRegistration"
-              checked={allowRegistration}
-              onCheckedChange={(checked) =>
-                setValue("allowRegistration", !!checked)
-              }
-            />
-            <Label htmlFor="allowRegistration" className="text-sm font-medium">
-              Permitir registro de novos usuários
-            </Label>
+          <div className="space-y-3">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="allowRegistration"
+                checked={allowRegistration}
+                onCheckedChange={(checked) =>
+                  setValue("allowRegistration", !!checked)
+                }
+              />
+              <Label htmlFor="allowRegistration" className="text-sm font-medium">
+                Permitir registro de novos usuários
+              </Label>
+            </div>
+            <p className="text-xs text-gray-500 ml-6">
+              Permitir que novos usuários se registrem no sistema
+            </p>
           </div>
         </CardContent>
       </Card>
