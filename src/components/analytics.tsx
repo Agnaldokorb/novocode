@@ -2,7 +2,14 @@ import { getSiteConfig } from "@/actions/site-config";
 import Script from "next/script";
 
 export async function GoogleAnalytics() {
-  const siteConfig = await getSiteConfig();
+  // Tentar buscar configurações, mas não falhar se não conseguir
+  let siteConfig = null;
+  try {
+    siteConfig = await getSiteConfig();
+  } catch (error) {
+    console.log("⚠️ Analytics desabilitado - erro ao buscar configurações do banco:", error);
+    return null;
+  }
 
   if (!siteConfig?.googleAnalyticsId) {
     return null;
@@ -27,7 +34,14 @@ export async function GoogleAnalytics() {
 }
 
 export async function FacebookPixel() {
-  const siteConfig = await getSiteConfig();
+  // Tentar buscar configurações, mas não falhar se não conseguir
+  let siteConfig = null;
+  try {
+    siteConfig = await getSiteConfig();
+  } catch (error) {
+    console.log("⚠️ Facebook Pixel desabilitado - erro ao buscar configurações do banco:", error);
+    return null;
+  }
 
   if (!siteConfig?.facebookPixelId) {
     return null;

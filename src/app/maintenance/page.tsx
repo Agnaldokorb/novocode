@@ -9,14 +9,19 @@ export const metadata: Metadata = {
 async function getSiteConfig() {
   try {
     const supabase = await createSupabaseServerClient();
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('site_config')
       .select('companyName, email, phone, whatsapp')
       .single();
     
+    if (error) {
+      console.log("⚠️ Erro ao buscar configurações na página de manutenção:", error);
+      return null;
+    }
+    
     return data;
   } catch (error) {
-    console.error('Erro ao buscar configurações:', error);
+    console.error('⚠️ Erro de conexão na página de manutenção:', error);
     return null;
   }
 }

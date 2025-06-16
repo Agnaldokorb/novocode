@@ -13,7 +13,13 @@ export async function generateDynamicMetadata(
     url: string;
   }> = {}
 ): Promise<Metadata> {
-  const siteConfig = await getSiteConfig();
+  // Tentar buscar configurações, mas não falhar se não conseguir
+  let siteConfig = null;
+  try {
+    siteConfig = await getSiteConfig();
+  } catch (error) {
+    console.log("⚠️ Usando metadados padrão - erro ao buscar configurações do banco:", error);
+  }
 
   // Valores padrão caso não existam configurações
   const defaultTitle = "NOVOCODE - Desenvolvimento de Software e Consultoria";

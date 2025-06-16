@@ -9,12 +9,25 @@ export async function middleware(request: NextRequest) {
   console.log("🛡️ Middleware executando para:", request.nextUrl.pathname);
 
   // Verificar modo de manutenção primeiro
-  const { data: siteConfig } = await supabase
-    .from("site_config")
-    .select("maintenanceMode")
-    .single();
+  let isMaintenanceMode = false;
+  try {
+    const { data: siteConfig, error } = await supabase
+      .from("site_config")
+      .select("maintenanceMode")
+      .single();
 
-  const isMaintenanceMode = siteConfig?.maintenanceMode || false;
+    if (error) {
+      console.log("⚠️ Erro ao verificar modo manutenção:", error.message);
+      // Em caso de erro, não ativar modo manutenção por segurança
+      isMaintenanceMode = false;
+    } else {
+      isMaintenanceMode = siteConfig?.maintenanceMode || false;
+    }
+  } catch (error) {
+    console.log("⚠️ Erro na conexão para verificar manutenção:", error);
+    // Em caso de erro de conexão, não ativar modo manutenção
+    isMaintenanceMode = false;
+  }
 
   // Rotas que ficam acessíveis durante manutenção
   const maintenanceAllowedRoutes = [

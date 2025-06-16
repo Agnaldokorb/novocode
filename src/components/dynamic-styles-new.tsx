@@ -1,8 +1,14 @@
 import { getSiteConfig } from "@/actions/site-config";
 
 // Server Component para buscar as cores e gerar CSS
-export async function DynamicStyles() {
-  const siteConfig = await getSiteConfig();
+export async function DynamicStylesNew() {
+  // Tentar buscar configurações, mas não falhar se não conseguir
+  let siteConfig = null;
+  try {
+    siteConfig = await getSiteConfig();
+  } catch (error) {
+    console.log("⚠️ Usando cores padrão - erro ao buscar configurações do banco:", error);
+  }
 
   const primaryColor = siteConfig?.primaryColor || "#3b82f6";
   const secondaryColor = siteConfig?.secondaryColor || "#8b5cf6";

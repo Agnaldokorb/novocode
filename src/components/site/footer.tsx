@@ -5,7 +5,14 @@ import { OptimizedImage } from "@/components/ui/optimized-image";
 
 export default async function SiteFooter() {
   const currentYear = new Date().getFullYear();
-  const siteConfig = await getSiteConfig();
+  
+  // Tentar buscar configurações, mas não falhar se não conseguir
+  let siteConfig = null;
+  try {
+    siteConfig = await getSiteConfig();
+  } catch (error) {
+    console.log("⚠️ Usando configurações padrão - erro ao buscar do banco:", error);
+  }
 
   // Dados padrão caso não haja configuração
   const companyName = siteConfig?.companyName || "NOVOCODE";
