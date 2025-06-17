@@ -1,60 +1,89 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { prisma } from "@/lib/prisma";
 import { FileText, Briefcase, Code, Star, Eye } from "lucide-react";
+import { withDatabaseFallback, supabaseRest } from "@/lib/database-fallback";
 
 async function getStats() {
-  try {
-    const [
-      servicesCount,
-      portfolioCount,
-      blogPostsCount,
-      technologiesCount,
-      featuredServices,
-      featuredPortfolio,
-      featuredPosts,
-      publishedPosts,
-      publishedServices,
-      publishedPortfolio,
-    ] = await Promise.all([
-      prisma.service.count(),
-      prisma.portfolio.count(),
-      prisma.blogPost.count(),
-      prisma.technology.count(),
-      prisma.service.count({ where: { featured: true } }),
-      prisma.portfolio.count({ where: { featured: true } }),
-      prisma.blogPost.count({ where: { featured: true } }),
-      prisma.blogPost.count({ where: { status: "PUBLISHED" } }),
-      prisma.service.count({ where: { status: "PUBLISHED" } }),
-      prisma.portfolio.count({ where: { publicationStatus: "PUBLISHED" } }),
-    ]);
+  return withDatabaseFallback(
+    async () => {
+      const [
+        servicesCount,
+        portfolioCount,
+        blogPostsCount,
+        technologiesCount,
+        featuredServices,
+        featuredPortfolio,
+        featuredPosts,
+        publishedPosts,
+        publishedServices,
+        publishedPortfolio,
+      ] = await Promise.all([
+        prisma.service.count(),
+        prisma.portfolio.count(),
+        prisma.blogPost.count(),
+        prisma.technology.count(),
+        prisma.service.count({ where: { featured: true } }),
+        prisma.portfolio.count({ where: { featured: true } }),
+        prisma.blogPost.count({ where: { featured: true } }),
+        prisma.blogPost.count({ where: { status: "PUBLISHED" } }),
+        prisma.service.count({ where: { status: "PUBLISHED" } }),
+        prisma.portfolio.count({ where: { publicationStatus: "PUBLISHED" } }),
+      ]);
 
-    return {
-      services: {
-        total: servicesCount,
-        published: publishedServices,
-        featured: featuredServices,
-      },
-      portfolio: {
-        total: portfolioCount,
-        published: publishedPortfolio,
-        featured: featuredPortfolio,
-      },
-      blog: {
-        total: blogPostsCount,
-        published: publishedPosts,
-        featured: featuredPosts,
-      },
-      technologies: { total: technologiesCount },
-    };
-  } catch (error) {
-    console.error("Erro ao buscar estatísticas:", error);
-    return {
+      return {
+        services: {
+          total: servicesCount,
+          published: publishedServices,
+          featured: featuredServices,
+        },
+        portfolio: {
+          total: portfolioCount,
+          published: publishedPortfolio,
+          featured: featuredPortfolio,
+        },
+        blog: {
+          total: blogPostsCount,
+          published: publishedPosts,
+          featured: featuredPosts,
+        },
+        technologies: { total: technologiesCount },
+      };
+    },
+    async () => {
+      // Fallback usando API REST
+      const [services, portfolios, posts, technologies] = await Promise.all([
+        supabaseRest.getServices(),
+        supabaseRest.getPortfolios(),
+        supabaseRest.getBlogPosts(),
+        supabaseRest.getTechnologies(),
+      ]);
+
+      return {
+        services: {
+          total: services.length,
+          published: services.filter((s: any) => s.status === 'PUBLISHED').length,
+          featured: services.filter((s: any) => s.featured).length,
+        },
+        portfolio: {
+          total: portfolios.length,
+          published: portfolios.filter((p: any) => p.publicationStatus === 'PUBLISHED').length,
+          featured: portfolios.filter((p: any) => p.featured).length,
+        },
+        blog: {
+          total: posts.length,
+          published: posts.filter((p: any) => p.status === 'PUBLISHED').length,
+          featured: posts.filter((p: any) => p.featured).length,
+        },
+        technologies: { total: technologies.length },
+      };
+    },
+    {
       services: { total: 0, published: 0, featured: 0 },
       portfolio: { total: 0, published: 0, featured: 0 },
       blog: { total: 0, published: 0, featured: 0 },
       technologies: { total: 0 },
-    };
-  }
+    }
+  );
 }
 
 export async function DashboardStats() {

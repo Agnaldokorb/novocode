@@ -69,30 +69,60 @@ const nextConfig: NextConfig = {
     // Otimizações para build na Vercel
     optimizePackageImports: ['@supabase/supabase-js'],
   },
+  // Configuração do Turbopack para builds
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
+      },
+    },
+  },
   // Configuração movida de experimental para raiz
-  serverExternalPackages: ['@prisma/client'],
+  serverExternalPackages: ['@prisma/client', 'prisma'],
+  // Otimizações para build
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn'],
+    } : false,
+  },
   // Configurações específicas para resolver problemas de build
   webpack: (config, { isServer, buildId, dev }) => {
-    // Correção específica para problema de client reference manifest na Vercel
-    if (!dev && !isServer) {
-      // Evita geração de manifests problemáticos
-      const originalEntry = config.entry;
-      config.entry = async () => {
-        const entries = await originalEntry();
-        // Remove entradas problemáticas de client manifests
-        Object.keys(entries).forEach(key => {
-          if (key.includes('page_client-reference-manifest')) {
-            delete entries[key];
-          }
-        });
-        return entries;
+    // Configurações específicas para produção
+    if (!dev) {
+      // Otimizações de bundle
+      config.optimization = {
+        ...config.optimization,
+        moduleIds: 'deterministic',
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            default: {
+              minChunks: 2,
+              priority: -20,
+              reuseExistingChunk: true,
+            },
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              priority: -10,
+              chunks: 'all',
+            },
+            prisma: {
+              test: /[\\/]node_modules[\\/](@prisma|prisma)[\\/]/,
+              name: 'prisma',
+              priority: 10,
+              chunks: 'all',
+            },
+          },
+        },
       };
     }
 
-    // Correção para problema de client reference manifest
+    // Configurações universais
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@/': new URL('./src/', import.meta.url).pathname,
+      '@': new URL('./src/', import.meta.url).pathname,
     };
     
     if (!isServer) {
@@ -102,33 +132,27 @@ const nextConfig: NextConfig = {
         fs: false,
         net: false,
         tls: false,
+        crypto: false,
       };
     }
 
-    // Configurações de otimização específicas para Vercel
-    config.optimization = {
-      ...config.optimization,
-      splitChunks: {
-        ...config.optimization?.splitChunks,
-        cacheGroups: {
-          ...config.optimization?.splitChunks?.cacheGroups,
-          default: false,
-          vendors: false,
-          // Força agrupamento correto de client components
-          client: {
-            name: 'client-components',
-            chunks: 'all',
-            test: /[\\/]node_modules[\\/]/,
-            priority: 10,
-          },
-        },
-      },
-    };
+    // Configurações para evitar problemas com Prisma
+    config.externals = config.externals || [];
+    if (isServer) {
+      config.externals.push({
+        '@prisma/client': '@prisma/client',
+      });
+    }
 
     return config;
   },
-  // Configurações de output para evitar conflitos
+  // Configurações de output para deploy otimizado
   output: 'standalone',
+  // Configurações de build
+  generateBuildId: async () => {
+    // ID de build estável baseado em timestamp
+    return `build-${Date.now()}`;
+  },
 };
 
 export default nextConfig;

@@ -42,7 +42,6 @@ export async function generateDynamicMetadata(
     ? siteConfig.defaultKeywords
     : defaultKeywords;
   const companyName = siteConfig?.companyName || "NOVOCODE";
-
   // Combinar com overrides
   const finalTitle = overrides.title
     ? `${overrides.title} | ${companyName}`
@@ -52,7 +51,13 @@ export async function generateDynamicMetadata(
     ? [...overrides.keywords, ...baseKeywords]
     : baseKeywords;
 
+  // Configurar metadataBase para resolver URLs de imagens
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 
+                  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 
+                  'http://localhost:3000';
+
   return {
+    metadataBase: new URL(siteUrl),
     title: finalTitle,
     description: finalDescription,
     keywords: finalKeywords,
