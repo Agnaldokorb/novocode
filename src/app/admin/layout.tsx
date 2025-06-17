@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import AdminHeader from "@/components/admin/header";
 import AdminSidebar from "@/components/admin/sidebar";
 import { MaintenanceBanner } from "@/components/maintenance-banner";
-import { MaintenanceWrapper } from "@/components/maintenance-wrapper";
 import { Toaster } from "@/components/ui/sonner";
 
 interface AdminLayoutProps {
@@ -56,29 +55,26 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
   }
 
   if (userData.role !== "ADMIN") {
-    console.log(
-      "❌ Usuário não é ADMIN. Role atual:",
+    console.log(      "❌ Usuário não é ADMIN. Role atual:",
       userData.role,
       "- redirecionando para login"
     );
     redirect("/login");  }
   console.log("🎉 Acesso ao painel admin autorizado");  return (
-    <MaintenanceWrapper allowDuringMaintenance={true}>
-      <div className="min-h-screen bg-gray-50">
-        <AdminSidebar />
-        <div className="md:pl-64">
-          <AdminHeader
-            userEmail={userData.email}
-            userName={userData.name || undefined}
-          />
-          {/* Banner de manutenção */}
-          <div className="p-4 pb-0">
-            <MaintenanceBanner />
-          </div>
-          <main className="flex-1">{children}</main>
+    <div className="min-h-screen bg-gray-50">
+      <AdminSidebar />
+      <div className="md:pl-64">
+        <AdminHeader
+          userEmail={userData.email}
+          userName={userData.name || undefined}
+        />
+        {/* Banner de manutenção */}
+        <div className="p-4 pb-0">
+          <MaintenanceBanner />
         </div>
-        <Toaster position="top-center" richColors />
+        <main className="flex-1">{children}</main>
       </div>
-    </MaintenanceWrapper>
+      <Toaster position="top-center" richColors />
+    </div>
   );
 }
