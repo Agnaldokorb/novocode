@@ -92,7 +92,7 @@ export default async function SiteFooter() {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="/servicos/desenvolvimento-web"
+                  href="/servicos"
                   className="text-sm hover:text-white transition-colors"
                 >
                   Desenvolvimento Web
@@ -100,7 +100,7 @@ export default async function SiteFooter() {
               </li>
               <li>
                 <Link
-                  href="/servicos/aplicativos-mobile"
+                  href="/servicos"
                   className="text-sm hover:text-white transition-colors"
                 >
                   Aplicativos Mobile
@@ -108,7 +108,7 @@ export default async function SiteFooter() {
               </li>
               <li>
                 <Link
-                  href="/servicos/consultoria"
+                  href="/servicos"
                   className="text-sm hover:text-white transition-colors"
                 >
                   Consultoria Tecnológica
@@ -116,7 +116,7 @@ export default async function SiteFooter() {
               </li>
               <li>
                 <Link
-                  href="/servicos/automacao"
+                  href="/servicos"
                   className="text-sm hover:text-white transition-colors"
                 >
                   Automação de Processos
@@ -124,7 +124,7 @@ export default async function SiteFooter() {
               </li>
               <li>
                 <Link
-                  href="/servicos/integracao"
+                  href="/servicos"
                   className="text-sm hover:text-white transition-colors"
                 >
                   Integração de Sistemas
@@ -174,14 +174,6 @@ export default async function SiteFooter() {
                   className="text-sm hover:text-white transition-colors"
                 >
                   Sobre Nós
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/carreira"
-                  className="text-sm hover:text-white transition-colors"
-                >
-                  Carreira
                 </Link>
               </li>
             </ul>

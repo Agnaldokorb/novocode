@@ -22,12 +22,15 @@ export async function GET() {
       take: 10, // Limitar a 10 testimonials mais recentes
     });
 
-    return NextResponse.json({ testimonials });
-  } catch (error) {
+    return NextResponse.json({ testimonials });  } catch (error) {
     console.error("Erro ao buscar depoimentos:", error);
-    return NextResponse.json(
-      { error: "Erro interno do servidor" },
-      { status: 500 }
-    );
+    
+    // Em caso de erro de banco, retornar array vazio ao invés de erro 500
+    console.log("🔄 Retornando lista vazia de depoimentos devido a erro de DB");
+    return NextResponse.json({ 
+      testimonials: [],
+      fallback: true,
+      message: "Banco de dados temporariamente indisponível" 
+    });
   }
 } 

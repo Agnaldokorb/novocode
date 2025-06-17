@@ -79,7 +79,7 @@ export async function getOrCreateSiteConfig(): Promise<SiteConfig> {
       address: "Brusque, Santa Catarina, Brasil",
       socialLinkedin: "https://linkedin.com/company/novocode",
       socialGithub: "https://github.com/NovoCode-Tec",
-      logo: "https://gdgidcaflispcxwbqnjf.supabase.co/storage/v1/object/public/uploads/logo/novocode-logo.png",
+      logo: "https://souqjphlttbvtibwschm.supabase.co/storage/v1/object/public/uploads/site/novocode_1750117406764_boek2p.png",
       defaultMetaTitle: "NOVOCODE - Tecnologia e Inovação",
       defaultMetaDescription:
         "Desenvolvimento de sistemas web, aplicações mobile e soluções tecnológicas personalizadas para empresas de todos os portes.",
