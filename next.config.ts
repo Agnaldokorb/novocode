@@ -75,8 +75,32 @@ const nextConfig: NextConfig = {
     // Otimizações para build na Vercel
     optimizePackageImports: ['@supabase/supabase-js'],
   },
+  // Configuração movida de experimental para raiz
+  serverExternalPackages: ['@prisma/client'],
   // Configurações específicas para resolver problemas de build
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, buildId, dev }) => {
+    // Correção específica para problema de client reference manifest na Vercel
+    if (!dev && !isServer) {
+      // Evita geração de manifests problemáticos
+      const originalEntry = config.entry;
+      config.entry = async () => {
+        const entries = await originalEntry();
+        // Remove entradas problemáticas de client manifests
+        Object.keys(entries).forEach(key => {
+          if (key.includes('page_client-reference-manifest')) {
+            delete entries[key];
+          }
+        });
+        return entries;
+      };
+    }
+
+    // Correção para problema de client reference manifest
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@/': new URL('./src/', import.meta.url).pathname,
+    };
+    
     if (!isServer) {
       // Configurações para client-side
       config.resolve.fallback = {
@@ -86,8 +110,31 @@ const nextConfig: NextConfig = {
         tls: false,
       };
     }
+
+    // Configurações de otimização específicas para Vercel
+    config.optimization = {
+      ...config.optimization,
+      splitChunks: {
+        ...config.optimization?.splitChunks,
+        cacheGroups: {
+          ...config.optimization?.splitChunks?.cacheGroups,
+          default: false,
+          vendors: false,
+          // Força agrupamento correto de client components
+          client: {
+            name: 'client-components',
+            chunks: 'all',
+            test: /[\\/]node_modules[\\/]/,
+            priority: 10,
+          },
+        },
+      },
+    };
+
     return config;
   },
+  // Configurações de output para evitar conflitos
+  output: 'standalone',
 };
 
 export default nextConfig;
