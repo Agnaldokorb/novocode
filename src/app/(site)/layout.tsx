@@ -1,4 +1,4 @@
-import { SiteHeader } from "@/components/site/header";
+import { SiteHeader } from "@/components/site/header-static";
 import { SiteFooter } from "@/components/site/footer";
 import { GoogleAnalytics, FacebookPixel } from "@/components/analytics-client";
 

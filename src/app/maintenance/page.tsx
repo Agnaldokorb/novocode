@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import MaintenancePageClient from "./page-client";
+import MaintenancePageClient from "./maintenance-client";
 
 export const metadata: Metadata = {
   title: "Site em Manutenção - NovoCode",

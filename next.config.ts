@@ -71,6 +71,23 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    // Otimizações para build na Vercel
+    optimizePackageImports: ['@supabase/supabase-js'],
+  },
+  // Configurações específicas para resolver problemas de build
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // Configurações para client-side
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
+    }
+    return config;
+  },
 };
 
 export default nextConfig;
