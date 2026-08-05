@@ -1,4 +1,5 @@
 import Image from "next/image";
+import atendimentoImage from "../../../../public/Atendimento.png";
 
 const highlights = [
   "Atendimento centralizado",
@@ -122,10 +123,8 @@ export default function Top() {
             </div>
 
             <Image
-              src="/Atendimento_02.png"
+              src={atendimentoImage}
               alt="Central de atendimento NovoCode exibindo conversas, clientes e automações do WhatsApp"
-              width={2732}
-              height={1758}
               sizes="(max-width: 1280px) calc(100vw - 32px), 1152px"
               priority
               className="h-auto w-full rounded-xl border border-border sm:rounded-2xl"

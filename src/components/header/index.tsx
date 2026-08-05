@@ -3,6 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import darkLogo from "../../../public/logo-fundo-escuro.png";
+import lightLogo from "../../../public/logo-fundo-branco.png";
 
 const navigation = [
   { href: "#functionality", label: "Funcionalidades" },
@@ -65,18 +67,14 @@ export default function Header() {
           aria-label="NovoCode — página inicial"
         >
           <Image
-            src="/logo-fundo-branco.png"
+            src={lightLogo}
             alt="NovoCode"
-            width={195}
-            height={74}
             priority
-            className="h-10 w-auto dark:hidden"
+            className="h-14 w-auto dark:hidden"
           />
           <Image
-            src="/logo-fundo-escuro.png"
+            src={darkLogo}
             alt="NovoCode"
-            width={120}
-            height={40}
             priority
             className="hidden h-10 w-auto dark:block"
           />

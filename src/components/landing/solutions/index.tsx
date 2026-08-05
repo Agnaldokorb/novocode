@@ -1,45 +1,50 @@
 import Image from "next/image";
+import atendimentoImage from "../../../../public/Atendimento_02.png";
+import atendimentoCardImage from "../../../../public/Atendimento-card.png";
+import crmCardImage from "../../../../public/crm-card.png";
+import inteligenciaCardImage from "../../../../public/inteligencia-card.png";
+import funilVendasImage from "../../../../public/funil-vendas.png";
 
 const cardsSolutions = [
   {
-    title: "Atendimento centralizado",
+    title: "Atendimento",
     description:
-      "Reúna todas as conversas em um único lugar para sua equipe responder com contexto, agilidade e organização.",
-    icon: "inbox",
+      "Ganhe agilidade e mantenha o controle. Com todos os canais em um só lugar, sua equipe reduz o tempo de resposta, mantém o histórico do cliente, mesmo com alto volume de mensagens.",
+    image: atendimentoCardImage,
   },
   {
-    title: "Automação de mensagens",
+    title: "CRM",
     description:
-      "Crie respostas automáticas e fluxos inteligentes que agilizam o atendimento sem perder a proximidade com o cliente.",
-    icon: "automation",
+      "Acompanhe o funil de vendas em tempo real, veja o que está travando o avanço dos leads e use informações precisas para tomar decisões que aumentam conversões e retenção.",
+    image: crmCardImage,
   },
   {
-    title: "Relatórios e análises",
+    title: "Inteligência Artificial",
     description:
-      "Acompanhe o desempenho da operação e transforme dados de atendimento em decisões mais rápidas e estratégicas.",
-    icon: "analytics",
+      "Atendimento inteligente, 24h por dia. Crie agentes que executam rotinas de atendimento, vendas e suporte e ajudam você a manter a qualidade do serviço.",
+    image: inteligenciaCardImage,
   },
 ] as const;
 
 const serviceFeatures = [
   "Acesso em tempo real a todas as conversas.",
-  "Filas de atendimento com controle da distribuição entre equipes e operadores.",
-  "Suporte a WhatsApp, Instagram e Messenger.",
-  "Acesso via web ou aplicativo para atender de qualquer lugar.",
+  "Filas de atendimento, com controle total da distribuição entre equipes e operadores.",
+  "Suporte aos canais de atendimento da Meta: WhatsApp, Instagram e Messenger.",
+  "Atenda de onde estiver: Acesse tudo via web ou App, com agilidade e organização.",
 ];
 
 const crmFeatures = [
-  "Funil de vendas conectado aos seus canais de mensagens.",
-  "Acompanhamento completo da prospecção ao fechamento.",
-  "Histórico unificado de interações, registros e atividades.",
-  "WhatsApp, Instagram e Messenger integrados ao processo comercial.",
+  "Conecte seu funil de vendas aos canais de mensagens, centralizando todas as conversas.",
+  "Acompanhamento completo de cada etapa da jornada, da prospecção ao fechamento.",
+  "Histórico unificado: acesse interações, registros e atividades em um só lugar.",
+  "WhatsApp, Instagram e Messenger integrados ao seu processo comercial.",
 ];
 
 export default function Solutions() {
   return (
     <div id="functionality" className="bg-background">
       <section
-        className="relative overflow-hidden border-y border-border bg-surface-muted py-20 sm:py-24 lg:py-28"
+        className="relative overflow-hidden border-y border-border bg-surface-muted pb-32 pt-20 sm:pb-36 sm:pt-24 lg:pb-40 lg:pt-28"
         aria-labelledby="solutions-title"
       >
         <div
@@ -64,30 +69,27 @@ export default function Solutions() {
             </p>
           </div>
 
-          <div className="mt-12 grid gap-5 md:grid-cols-3 lg:mt-16 lg:gap-6">
-            {cardsSolutions.map((card, index) => (
+          <div className="mt-12 grid gap-x-5 gap-y-20 md:grid-cols-3 lg:mt-16 lg:gap-x-6">
+            {cardsSolutions.map((card) => (
               <article
                 key={card.title}
-                className="group relative overflow-hidden rounded-2xl border border-border bg-background p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-fern-700 hover:shadow-xl hover:shadow-pine-teal-100/5 sm:p-7 dark:hover:border-pine-teal-400"
+                className="group relative flex min-h-80 flex-col overflow-visible rounded-2xl border border-border/70 bg-background px-6 pb-0 pt-7 shadow-[0_18px_60px_-24px_rgba(52,78,65,0.28)] transition duration-300 hover:-translate-y-1 hover:border-fern-700 hover:shadow-[0_24px_70px_-24px_rgba(52,78,65,0.4)] sm:px-7 dark:hover:border-pine-teal-400"
               >
-                <span
-                  className="absolute right-5 top-4 text-5xl font-black tracking-tighter text-fern-900/60 dark:text-pine-teal-400/30"
-                  aria-hidden="true"
-                >
-                  0{index + 1}
-                </span>
-
-                <div className="flex size-12 items-center justify-center rounded-2xl bg-fern-900 text-fern-500 transition-colors group-hover:bg-fern-500 group-hover:text-white dark:bg-pine-teal-300 dark:text-dry-sage-500 dark:group-hover:bg-dry-sage-500 dark:group-hover:text-pine-teal-100">
-                  <SolutionIcon type={card.icon} />
-                </div>
-                <h3 className="mt-8 text-xl font-bold tracking-tight text-foreground">
+                <h3 className="text-2xl font-black tracking-tight text-foreground">
                   {card.title}
                 </h3>
-                <p className="mt-3 text-sm leading-6 text-muted-foreground sm:text-base">
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
                   {card.description}
                 </p>
 
-                <div className="mt-6 h-0.5 w-10 rounded-full bg-fern-700 transition-all duration-300 group-hover:w-20 group-hover:bg-fern-500 dark:bg-pine-teal-600 dark:group-hover:bg-dry-sage-500" />
+                <div className="mx-auto mt-auto w-[82%] translate-y-12 overflow-hidden rounded-xl border border-border bg-white shadow-lg transition duration-300 group-hover:translate-y-11 group-hover:shadow-xl">
+                  <Image
+                    src={card.image}
+                    alt={`Ilustração da solução de ${card.title} da NovoCode`}
+                    sizes="(max-width: 767px) calc(82vw - 48px), (max-width: 1279px) 25vw, 290px"
+                    className="h-auto w-full"
+                  />
+                </div>
               </article>
             ))}
           </div>
@@ -97,18 +99,14 @@ export default function Solutions() {
       <section className="relative overflow-hidden py-20 sm:py-24 lg:py-32" aria-labelledby="service-title">
         <div className="mx-auto grid w-full max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8">
           <ProductVisual label="Inbox multicanal" />
-
           <div className="lg:pl-4">
-            <SectionEyebrow number="01">Atendimento humano</SectionEyebrow>
+            <SectionEyebrow number="01">Atendimento</SectionEyebrow>
             <h2
               id="service-title"
               className="mt-5 text-balance text-3xl font-black tracking-[-0.035em] text-foreground sm:text-4xl"
             >
-              Inbox e CRM multicanal para toda a equipe
+              Todas as conversas centralizadas e organizadas
             </h2>
-            <p className="mt-5 text-lg font-semibold leading-8 text-hunter-green-500 dark:text-dry-sage-600">
-              Todas as conversas centralizadas e organizadas.
-            </p>
             <FeatureList items={serviceFeatures} />
           </div>
         </div>
@@ -117,7 +115,7 @@ export default function Solutions() {
       <section className="border-y border-border bg-surface-muted py-20 sm:py-24 lg:py-32" aria-labelledby="crm-title">
         <div className="mx-auto grid w-full max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8">
           <div className="lg:pr-4">
-            <SectionEyebrow number="02">Gestão comercial</SectionEyebrow>
+            <SectionEyebrow number="02">CRM</SectionEyebrow>
             <h2
               id="crm-title"
               className="mt-5 text-balance text-3xl font-black tracking-[-0.035em] text-foreground sm:text-4xl"
@@ -131,7 +129,7 @@ export default function Solutions() {
           </div>
 
           <div className="lg:order-last">
-            <ProductVisual label="Funil de vendas integrado" />
+            <ProductVisual label="Funil de vendas" />
           </div>
         </div>
       </section>
@@ -158,10 +156,8 @@ function ProductVisual({ label }: { label: string }) {
           </span>
         </div>
         <Image
-          src="/Atendimento_02.png"
+          src={label === "Funil de vendas" ? funilVendasImage : atendimentoImage}
           alt={`Interface NovoCode: ${label}`}
-          width={2732}
-          height={1758}
           sizes="(max-width: 1024px) calc(100vw - 32px), 50vw"
           className="h-auto w-full rounded-xl border border-border sm:rounded-2xl"
         />
@@ -207,37 +203,3 @@ function FeatureList({ items }: { items: readonly string[] }) {
   );
 }
 
-function SolutionIcon({ type }: { type: (typeof cardsSolutions)[number]["icon"] }) {
-  const commonProps = {
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.8,
-    className: "size-6",
-    "aria-hidden": true,
-  } as const;
-
-  if (type === "automation") {
-    return (
-      <svg {...commonProps}>
-        <path d="m13 2-1.6 5.4a2 2 0 0 1-1.3 1.3L5 10l5.1 1.3a2 2 0 0 1 1.3 1.3L13 18l1.6-5.4a2 2 0 0 1 1.3-1.3L21 10l-5.1-1.3a2 2 0 0 1-1.3-1.3L13 2Z" />
-        <path d="m5 16-.7 2.3L2 19l2.3.7L5 22l.7-2.3L8 19l-2.3-.7L5 16Z" />
-      </svg>
-    );
-  }
-
-  if (type === "analytics") {
-    return (
-      <svg {...commonProps}>
-        <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg {...commonProps}>
-      <path d="M4 5h16v12H7l-3 3V5Z" />
-      <path d="M8 9h8M8 13h5" />
-    </svg>
-  );
-}
