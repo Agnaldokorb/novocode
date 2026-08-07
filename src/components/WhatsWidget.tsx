@@ -12,15 +12,19 @@ declare global {
 }
 
 function initializeWidgetAfterWindowLoad() {
-  if (
-    document.readyState !== "complete" ||
-    document.getElementById("h-widget-iframe")
-  ) {
+  const initialize = () => {
+    if (document.getElementById("h-widget-iframe")) return;
+
+    window.hWidget?.handleUtm();
+    window.hWidget?.init();
+  };
+
+  if (document.readyState === "complete") {
+    initialize();
     return;
   }
 
-  window.hWidget?.handleUtm();
-  window.hWidget?.init();
+  window.addEventListener("load", initialize, { once: true });
 }
 
 export default function WhatsWidget() {

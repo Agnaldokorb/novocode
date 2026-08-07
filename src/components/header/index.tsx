@@ -7,10 +7,10 @@ import darkLogo from "../../../public/logo-fundo-escuro.png";
 import lightLogo from "../../../public/logo-fundo-branco.png";
 
 const navigation = [
-  { href: "#functionality", label: "Funcionalidades" },
-  { href: "#price", label: "Preços" },
-  { href: "#documentation", label: "Documentação" },
-  { href: "#about", label: "Sobre" },
+  { href: "/", label: "Funcionalidades" },
+  { href: "/precos", label: "Preços" },
+  { href: "/", label: "Documentação" },
+  { href: "/", label: "Sobre" },
 ];
 
 type Theme = "light" | "dark";
@@ -82,13 +82,13 @@ export default function Header() {
 
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Navegação principal">
           {navigation.map((item) => (
-            <a
-              key={item.href}
+            <Link
+              key={item.label}
               href={item.href}
               className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-surface-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               {item.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -138,14 +138,14 @@ export default function Header() {
         >
           <nav className="mx-auto flex max-w-7xl flex-col gap-1" aria-label="Navegação móvel">
             {navigation.map((item) => (
-              <a
-                key={item.href}
+              <Link
+                key={item.label}
                 href={item.href}
                 onClick={closeMenu}
                 className="rounded-lg px-3 py-3 font-medium text-muted-foreground transition-colors hover:bg-surface-muted hover:text-foreground"
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -159,7 +159,7 @@ export default function Header() {
             </Link>
             <Link
               href="/login"
-              className="h-widget-trigger rounded-full bg-primary px-4 py-2.5 font-semibold text-primary-foreground"
+              className="rounded-full bg-primary px-4 py-2.5 font-semibold text-primary-foreground"
             >
               Acessar portal
             </Link>
