@@ -5,6 +5,7 @@ import { loginSchema } from "@/lib/validations/auth";
 import { validationState, failureState, type ActionState } from "@/lib/actions/state";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
+import { getPostLoginRedirect } from "@/lib/auth/redirect";
 
 export async function loginAction(_: ActionState, formData: FormData): Promise<ActionState> {
   const parsed = loginSchema.safeParse({
@@ -27,7 +28,7 @@ export async function loginAction(_: ActionState, formData: FormData): Promise<A
     return failureState("Sua conta não está ativa. Entre em contato com o suporte.");
   }
 
-  redirect(user.role === "ADMIN" ? "/admin" : "/portal");
+  redirect(getPostLoginRedirect(formData.get("next"), user.role));
 }
 
 export async function logoutAction() {

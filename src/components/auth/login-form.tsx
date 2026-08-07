@@ -5,10 +5,11 @@ import { useFormStatus } from "react-dom";
 import { loginAction } from "@/app/actions/auth";
 import { initialActionState } from "@/lib/actions/state";
 
-export function LoginForm() {
+export function LoginForm({ nextPath }: { nextPath?: string }) {
   const [state, action] = useActionState(loginAction, initialActionState);
   return (
     <form action={action} className="mt-8 space-y-5">
+      {nextPath && <input type="hidden" name="next" value={nextPath} />}
       <label className="grid gap-2 text-sm font-semibold">
         E-mail
         <input name="email" type="email" autoComplete="email" required className="min-h-12 rounded-xl border border-border bg-background px-4 outline-none focus:border-accent focus:ring-2 focus:ring-accent/20" />

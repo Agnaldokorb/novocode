@@ -21,6 +21,8 @@ export async function refreshSupabaseSession(request: NextRequest) {
     },
   );
 
-  const { data } = await supabase.auth.getUser();
-  return { response, user: data.user };
+  // Verify the access token before trusting the identity in request cookies.
+  // getSession() alone would only decode client-controlled cookie state.
+  const { data, error } = await supabase.auth.getClaims();
+  return { response, claims: error ? null : (data?.claims ?? null) };
 }
