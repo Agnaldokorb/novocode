@@ -419,7 +419,7 @@ function Faq() {
 function CallToAction() {
   return (
     <section className="px-4 pb-20 sm:px-6 sm:pb-24 lg:px-8">
-      <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] border border-pine-teal-400 bg-pine-teal-200 px-6 py-12 text-center text-white shadow-2xl shadow-pine-teal-100/20 sm:px-10 sm:py-16 lg:px-16 lg:py-20">
+      <div className="relative mx-auto max-w-7xl overflow-hidden rounded-4xl border border-pine-teal-400 bg-pine-teal-200 px-6 py-12 text-center text-white shadow-2xl shadow-pine-teal-100/20 sm:px-10 sm:py-16 lg:px-16 lg:py-20">
         <div className="pointer-events-none absolute -left-20 -top-20 size-72 rounded-full bg-fern-500/20 blur-3xl" aria-hidden="true" />
         <div className="relative mx-auto max-w-3xl">
           <span className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-dry-sage-500 text-pine-teal-100">
@@ -456,7 +456,7 @@ function ProductFrame({
 }) {
   return (
     <div className="relative mx-auto w-full">
-      <div className="absolute -inset-4 -z-10 rounded-[2rem] bg-linear-to-r from-dry-sage-500/25 via-fern-500/12 to-hunter-green-500/20 blur-2xl" aria-hidden="true" />
+      <div className="absolute -inset-4 -z-10 rounded-4xl bg-linear-to-r from-dry-sage-500/25 via-fern-500/12 to-hunter-green-500/20 blur-2xl" aria-hidden="true" />
       <div className="overflow-hidden rounded-2xl border border-border bg-surface p-1.5 shadow-2xl shadow-pine-teal-100/15 sm:rounded-[1.75rem] sm:p-2.5 dark:shadow-black/30">
         <div className="flex items-center gap-1.5 px-2 pb-2 pt-0.5 sm:px-3 sm:pb-3">
           <span className="size-2.5 rounded-full bg-fern-700 sm:size-3" />
