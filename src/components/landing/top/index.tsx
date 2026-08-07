@@ -61,10 +61,10 @@ export default function Top() {
 
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
-              href="/login"
+              href="https://novocode.tec.br/"
               className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-primary-foreground shadow-lg shadow-hunter-green-500/20 transition hover:-translate-y-0.5 hover:bg-accent hover:text-accent-foreground hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent sm:w-auto"
             >
-              Acessar portal
+              Acessar plataforma
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -77,8 +77,7 @@ export default function Top() {
               </svg>
             </Link>
             <a
-              href="https://novocode.tec.br/"
-              className="inline-flex min-h-12 w-full items-center justify-center rounded-full border border-border bg-background/70 px-6 py-3 text-sm font-bold text-foreground backdrop-blur transition hover:-translate-y-0.5 hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent sm:w-auto"
+              className="h-widget-trigger inline-flex min-h-12 w-full items-center justify-center rounded-full border border-border bg-background/70 px-6 py-3 text-sm font-bold text-foreground backdrop-blur transition hover:-translate-y-0.5 hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent sm:w-auto"
             >
               Conhecer a plataforma
             </a>

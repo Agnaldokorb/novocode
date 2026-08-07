@@ -9,8 +9,13 @@ import lightLogo from "../../../public/logo-fundo-branco.png";
 const navigation = [
   { href: "/", label: "Funcionalidades" },
   { href: "/precos", label: "Preços" },
-  { href: "/", label: "Documentação" },
-  { href: "/", label: "Sobre" },
+  {
+    href: "https://flwchat.readme.io/",
+    label: "Documentação",
+    target: "_blank",
+    rel: "noopener noreferrer",
+  },
+  { href: "/sobre", label: "Sobre" },
 ];
 
 type Theme = "light" | "dark";
@@ -85,6 +90,8 @@ export default function Header() {
             <Link
               key={item.label}
               href={item.href}
+              target={item.target}
+              rel={item.rel}
               className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-surface-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               {item.label}
@@ -141,6 +148,8 @@ export default function Header() {
               <Link
                 key={item.label}
                 href={item.href}
+                target={item.target}
+                rel={item.rel}
                 onClick={closeMenu}
                 className="rounded-lg px-3 py-3 font-medium text-muted-foreground transition-colors hover:bg-surface-muted hover:text-foreground"
               >
