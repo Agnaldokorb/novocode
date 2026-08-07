@@ -17,7 +17,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useRef, type ReactNode } from "react";
-import { buildWidgetPlanContextUrl } from "@/lib/widget-plan-context";
 
 const plans = [
   {
@@ -370,7 +369,6 @@ function PlanButton({
       <button
         type="button"
         data-plan={planName}
-        onClickCapture={() => setWidgetPlanContext(planName)}
         className="h-widget-trigger inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-dry-sage-500 px-4 py-2.5 text-sm font-black text-pine-teal-100 transition hover:-translate-y-0.5 hover:bg-dry-sage-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dry-sage-500"
       >
         {custom ? "Falar com consultor" : "Começar agora"}
@@ -496,7 +494,6 @@ function ComparisonTable() {
           <button
             type="button"
             data-plan="Ajuda para escolher um plano"
-            onClickCapture={() => setWidgetPlanContext("Ajuda para escolher um plano")}
             className="h-widget-trigger inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-black text-primary-foreground transition hover:-translate-y-0.5 hover:bg-accent sm:w-auto"
           >
             Conversar com especialista
@@ -547,18 +544,4 @@ function isIncluded(items: readonly string[], feature: string) {
   return items.some(
     (item) => item.toLocaleLowerCase("pt-BR") === feature.toLocaleLowerCase("pt-BR"),
   );
-}
-
-function setWidgetPlanContext(planName: string) {
-  const iframe = document.getElementById("h-widget-iframe");
-
-  if (!(iframe instanceof HTMLIFrameElement) || !iframe.src) return;
-
-  const nextSrc = buildWidgetPlanContextUrl(
-    iframe.src,
-    planName,
-    window.location.href,
-  );
-
-  if (iframe.src !== nextSrc) iframe.src = nextSrc;
 }
