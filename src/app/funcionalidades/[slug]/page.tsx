@@ -1,6 +1,17 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Footer from "@/components/footer";
+import CampaignsFeaturePage from "@/components/features/campaigns-feature-page";
+import AutomationSuiteFeaturePage, {
+  isAutomationFeatureVariant,
+} from "@/components/features/automation-suite-feature-page";
+import CustomerPortfolioFeaturePage from "@/components/features/customer-portfolio-feature-page";
+import CrmFeaturePage from "@/components/features/crm-feature-page";
+import GroupsFeaturePage from "@/components/features/groups-feature-page";
+import InternalChatFeaturePage from "@/components/features/internal-chat-feature-page";
+import PaymentsFeaturePage from "@/components/features/payments-feature-page";
+import ScheduledMessagesFeaturePage from "@/components/features/scheduled-messages-feature-page";
+import ServiceFeaturePage from "@/components/features/service-feature-page";
 import Header from "@/components/header";
 import WhatsWidget from "@/components/WhatsWidget";
 import { features, getFeatureBySlug } from "@/lib/feature-navigation";
@@ -34,6 +45,105 @@ export default async function FeaturePage({ params }: FeaturePageProps) {
   const feature = getFeatureBySlug(slug);
 
   if (!feature) notFound();
+
+  if (feature.slug === "crm") {
+    return (
+      <>
+        <WhatsWidget />
+        <Header />
+        <CrmFeaturePage />
+        <Footer />
+      </>
+    );
+  }
+
+  if (feature.slug === "pagamentos") {
+    return (
+      <>
+        <WhatsWidget />
+        <Header />
+        <PaymentsFeaturePage />
+        <Footer />
+      </>
+    );
+  }
+
+  if (feature.slug === "disparo-de-campanhas") {
+    return (
+      <>
+        <WhatsWidget />
+        <Header />
+        <CampaignsFeaturePage />
+        <Footer />
+      </>
+    );
+  }
+
+  if (feature.slug === "carteirizacao") {
+    return (
+      <>
+        <WhatsWidget />
+        <Header />
+        <CustomerPortfolioFeaturePage />
+        <Footer />
+      </>
+    );
+  }
+
+  if (feature.slug === "atendimento") {
+    return (
+      <>
+        <WhatsWidget />
+        <Header />
+        <ServiceFeaturePage />
+        <Footer />
+      </>
+    );
+  }
+
+  if (feature.slug === "grupos-na-api-oficial") {
+    return (
+      <>
+        <WhatsWidget />
+        <Header />
+        <GroupsFeaturePage />
+        <Footer />
+      </>
+    );
+  }
+
+  if (feature.slug === "mensagens-agendadas") {
+    return (
+      <>
+        <WhatsWidget />
+        <Header />
+        <ScheduledMessagesFeaturePage />
+        <Footer />
+      </>
+    );
+  }
+
+  if (feature.slug === "chat-interno") {
+    return (
+      <>
+        <WhatsWidget />
+        <Header />
+        <InternalChatFeaturePage />
+        <Footer />
+      </>
+    );
+  }
+
+  if (isAutomationFeatureVariant(feature.slug)) {
+    return (
+      <>
+        <WhatsWidget />
+        <Header />
+        <AutomationSuiteFeaturePage variant={feature.slug} />
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
