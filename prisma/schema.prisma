@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -10,4 +5,152 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+model User {
+  id                String     @id @default(uuid()) @db.Uuid
+  supabaseUserId    String     @unique @map("supabase_user_id") @db.Uuid
+  email             String     @unique
+  name              String
+  role              UserRole   @default(CLIENT)
+  active            Boolean    @default(true)
+  clientId          String?    @map("client_id") @db.Uuid
+  createdAt         DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime   @updatedAt @map("updated_at") @db.Timestamptz(6)
+  client            Client?    @relation(fields: [clientId], references: [id], onDelete: Restrict)
+  auditLogs         AuditLog[]
+  uploadedDocuments Document[] @relation("DocumentUploader")
+
+  @@index([clientId])
+  @@index([role, active])
+  @@map("app_users")
+}
+
+model Client {
+  id        String     @id @default(uuid()) @db.Uuid
+  name      String
+  email     String
+  phone     String?
+  cpfCnpj   String?    @unique @map("cpf_cnpj")
+  active    Boolean    @default(true)
+  createdAt DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime   @updatedAt @map("updated_at") @db.Timestamptz(6)
+  users     User[]
+  companies Company[]
+  contracts Contract[]
+  documents Document[]
+
+  @@index([active, name])
+  @@index([email])
+  @@map("clients")
+}
+
+model Company {
+  id        String     @id @default(uuid()) @db.Uuid
+  clientId  String     @map("client_id") @db.Uuid
+  legalName String     @map("legal_name")
+  tradeName String?    @map("trade_name")
+  cnpj      String     @unique
+  email     String?
+  phone     String?
+  address   String?
+  city      String?
+  state     String?    @db.Char(2)
+  zipCode   String?    @map("zip_code")
+  active    Boolean    @default(true)
+  createdAt DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime   @updatedAt @map("updated_at") @db.Timestamptz(6)
+  client    Client     @relation(fields: [clientId], references: [id])
+  contracts Contract[]
+  documents Document[]
+
+  @@index([legalName])
+  @@index([clientId, active])
+  @@map("companies")
+}
+
+model Document {
+  id             String       @id @default(uuid()) @db.Uuid
+  clientId       String       @map("client_id") @db.Uuid
+  companyId      String?      @map("company_id") @db.Uuid
+  uploadedById   String       @map("uploaded_by_id") @db.Uuid
+  type           DocumentType
+  title          String
+  description    String?
+  fileName       String       @map("file_name")
+  filePath       String       @unique @map("file_path")
+  mimeType       String       @map("mime_type")
+  fileSize       Int          @map("file_size")
+  referenceMonth DateTime?    @map("reference_month") @db.Date
+  dueDate        DateTime?    @map("due_date") @db.Date
+  uploadedAt     DateTime     @default(now()) @map("uploaded_at") @db.Timestamptz(6)
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
+  contract       Contract?
+  client         Client       @relation(fields: [clientId], references: [id])
+  company        Company?     @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  uploadedBy     User         @relation("DocumentUploader", fields: [uploadedById], references: [id])
+
+  @@index([uploadedById])
+  @@index([clientId, type, createdAt])
+  @@index([companyId, type])
+  @@index([dueDate])
+  @@map("documents")
+}
+
+model Contract {
+  id          String         @id @default(uuid()) @db.Uuid
+  clientId    String         @map("client_id") @db.Uuid
+  companyId   String?        @map("company_id") @db.Uuid
+  documentId  String?        @unique @map("document_id") @db.Uuid
+  title       String
+  description String?
+  startDate   DateTime       @map("start_date") @db.Date
+  endDate     DateTime?      @map("end_date") @db.Date
+  status      ContractStatus @default(PENDING)
+  createdAt   DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime       @updatedAt @map("updated_at") @db.Timestamptz(6)
+  client      Client         @relation(fields: [clientId], references: [id])
+  company     Company?       @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  document    Document?      @relation(fields: [documentId], references: [id])
+
+  @@index([companyId])
+  @@index([clientId, status])
+  @@index([endDate, status])
+  @@map("contracts")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String?  @map("user_id") @db.Uuid
+  action    String
+  entity    String
+  entityId  String?  @map("entity_id") @db.Uuid
+  metadata  Json?
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  user      User?    @relation(fields: [userId], references: [id])
+
+  @@index([entity, entityId])
+  @@index([action, createdAt])
+  @@index([userId, createdAt])
+  @@map("audit_logs")
+}
+
+enum UserRole {
+  ADMIN
+  CLIENT
+}
+
+enum DocumentType {
+  BOLETO
+  NOTA_FISCAL
+  CONTRATO
+  OUTRO
+}
+
+enum ContractStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  PENDING
 }

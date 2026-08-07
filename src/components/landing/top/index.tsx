@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import atendimentoImage from "../../../../public/Atendimento.png";
 
 const highlights = [
@@ -59,11 +60,11 @@ export default function Top() {
           </p>
 
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <a
-              href="https://novocode.tec.br/"
+            <Link
+              href="/login"
               className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-primary-foreground shadow-lg shadow-hunter-green-500/20 transition hover:-translate-y-0.5 hover:bg-accent hover:text-accent-foreground hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent sm:w-auto"
             >
-              Começar grátis
+              Acessar portal
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -74,7 +75,7 @@ export default function Top() {
               >
                 <path d="M5 12h14M13 6l6 6-6 6" />
               </svg>
-            </a>
+            </Link>
             <a
               href="https://novocode.tec.br/"
               className="inline-flex min-h-12 w-full items-center justify-center rounded-full border border-border bg-background/70 px-6 py-3 text-sm font-bold text-foreground backdrop-blur transition hover:-translate-y-0.5 hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent sm:w-auto"

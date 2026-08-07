@@ -1,0 +1,10 @@
+import Link from "next/link";
+import { prisma } from "@/lib/prisma";
+import { PageHeader, Card, EmptyState, StatusBadge } from "@/components/ui/display";
+import { ContractForm } from "@/components/admin/contract-form";
+import { contractStatusLabel, formatDate } from "@/lib/format";
+
+export default async function ContractsPage() {
+  const [clients, companies, documents, contracts] = await Promise.all([prisma.client.findMany({ where: { active: true }, orderBy: { name: "asc" }, select: { id: true, name: true } }), prisma.company.findMany({ where: { active: true }, orderBy: { legalName: "asc" }, select: { id: true, legalName: true } }), prisma.document.findMany({ where: { type: "CONTRATO", contract: null }, orderBy: { title: "asc" }, select: { id: true, title: true } }), prisma.contract.findMany({ orderBy: { createdAt: "desc" }, include: { client: true, company: true, document: true } })]);
+  return <><PageHeader title="Contratos" description="Cadastre vigência, status e vincule o PDF privado." /><Card><h2 className="mb-5 text-lg font-black">Novo contrato</h2><ContractForm clients={clients} companies={companies} documents={documents} /></Card>{contracts.length ? <div className="grid gap-4 lg:grid-cols-2">{contracts.map((contract) => <Card key={contract.id}><div className="flex items-start justify-between gap-3"><div><h2 className="font-black">{contract.title}</h2><p className="text-sm text-muted-foreground">{contract.client.name} · {contract.company?.legalName ?? "Sem empresa"}</p></div><StatusBadge active={contract.status === "ACTIVE"} label={contractStatusLabel(contract.status)} /></div><p className="mt-4 text-sm">{formatDate(contract.startDate)} até {formatDate(contract.endDate)}</p><div className="mt-4 flex gap-4 text-sm font-bold">{contract.document && <a href={`/api/documents/${contract.document.id}/download`} className="text-accent">Download</a>}<Link href={`/admin/contratos/${contract.id}`} className="text-accent">Editar</Link></div></Card>)}</div> : <EmptyState title="Nenhum contrato" description="Cadastre o primeiro contrato acima." />}</>;
+}

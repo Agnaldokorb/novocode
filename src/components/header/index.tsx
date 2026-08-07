@@ -94,18 +94,18 @@ export default function Header() {
 
         <div className="hidden items-center gap-2 sm:flex">
           <ThemeToggle onClick={toggleTheme} />
-          <a
-            href="https://novocode.tec.br/"
+          <Link
+            href="/login"
             className="rounded-full border border-border px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             Entrar
-          </a>
-          <button
-            type="button"
+          </Link>
+          <Link
+            href="/login"
             className="h-widget-trigger rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
-            Começar grátis
-          </button>
+            Acessar portal
+          </Link>
         </div>
 
         <button
@@ -151,18 +151,18 @@ export default function Header() {
 
           <div className="mx-auto mt-4 flex max-w-7xl flex-col gap-2 border-t border-border pt-4 sm:hidden">
             <ThemeToggle onClick={toggleTheme} showLabel />
-            <a
-              href="https://novocode.tec.br/"
+            <Link
+              href="/login"
               className="rounded-full border border-border px-4 py-2.5 text-center font-semibold text-foreground"
             >
               Entrar
-            </a>
-            <button
-              type="button"
+            </Link>
+            <Link
+              href="/login"
               className="h-widget-trigger rounded-full bg-primary px-4 py-2.5 font-semibold text-primary-foreground"
             >
-              Começar grátis
-            </button>
+              Acessar portal
+            </Link>
           </div>
         </div>
       )}

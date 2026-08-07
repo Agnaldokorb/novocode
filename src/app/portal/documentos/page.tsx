@@ -1,0 +1,10 @@
+import { requirePortalUser } from "@/lib/auth/session";
+import { prisma } from "@/lib/prisma";
+import { PageHeader } from "@/components/ui/display";
+import { PortalDocumentList } from "@/components/portal/document-list";
+
+export default async function PortalDocumentsPage({ searchParams }: { searchParams: Promise<{ q?: string; type?: "BOLETO" | "NOTA_FISCAL" | "CONTRATO" | "OUTRO"; companyId?: string; from?: string; to?: string }> }) {
+  const user = await requirePortalUser(); const params = await searchParams;
+  const companies = await prisma.company.findMany({ where: { clientId: user.clientId!, active: true }, select: { id: true, legalName: true }, orderBy: { legalName: "asc" } });
+  return <><PageHeader title="Documentos" description="Busque e baixe seus arquivos privados." /><form className="grid gap-3 rounded-2xl border border-border bg-background p-4 sm:grid-cols-2 xl:grid-cols-6"><input name="q" defaultValue={params.q} placeholder="Buscar" className="min-h-11 rounded-xl border border-border px-3 xl:col-span-2" /><select name="companyId" defaultValue={params.companyId} className="min-h-11 rounded-xl border border-border bg-background px-3"><option value="">Todas as empresas</option>{companies.map((company) => <option key={company.id} value={company.id}>{company.legalName}</option>)}</select><select name="type" defaultValue={params.type} className="min-h-11 rounded-xl border border-border bg-background px-3"><option value="">Todos os tipos</option><option value="BOLETO">Boleto</option><option value="NOTA_FISCAL">Nota fiscal</option><option value="CONTRATO">Contrato</option><option value="OUTRO">Outro</option></select><input name="from" type="date" defaultValue={params.from} className="min-h-11 rounded-xl border border-border px-3" /><input name="to" type="date" defaultValue={params.to} className="min-h-11 rounded-xl border border-border px-3" /><button className="rounded-xl bg-primary px-4 py-2 text-sm font-bold text-primary-foreground xl:col-start-6">Filtrar</button></form><PortalDocumentList clientId={user.clientId!} query={params.q} type={params.type} companyId={params.companyId} from={params.from} to={params.to} /></>;
+}
