@@ -2,12 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
+import { featureGroups, getFeatureHref } from "@/lib/feature-navigation";
 import darkLogo from "../../../public/logo-fundo-escuro.png";
 import lightLogo from "../../../public/logo-fundo-branco.png";
 
 const navigation = [
-  { href: "/", label: "Funcionalidades" },
   { href: "/precos", label: "Preços" },
   {
     href: "https://flwchat.readme.io/",
@@ -34,6 +35,7 @@ function getCurrentTheme(): Theme {
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileFeaturesOpen, setMobileFeaturesOpen] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -47,6 +49,7 @@ export default function Header() {
     const closeMenu = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setMenuOpen(false);
+        setMobileFeaturesOpen(false);
       }
     };
 
@@ -61,7 +64,10 @@ export default function Header() {
     localStorage.setItem("theme", nextTheme);
   };
 
-  const closeMenu = () => setMenuOpen(false);
+  const closeMenu = () => {
+    setMenuOpen(false);
+    setMobileFeaturesOpen(false);
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 shadow-sm backdrop-blur supports-backdrop-filter:bg-background/85">
@@ -86,6 +92,7 @@ export default function Header() {
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Navegação principal">
+          <DesktopFeaturesMenu />
           {navigation.map((item) => (
             <Link
               key={item.label}
@@ -144,6 +151,47 @@ export default function Header() {
           className="border-t border-border bg-background px-4 py-4 shadow-lg lg:hidden"
         >
           <nav className="mx-auto flex max-w-7xl flex-col gap-1" aria-label="Navegação móvel">
+            <button
+              type="button"
+              onClick={() => setMobileFeaturesOpen((current) => !current)}
+              className="flex w-full items-center justify-between rounded-lg px-3 py-3 text-left font-medium text-muted-foreground transition-colors hover:bg-surface-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              aria-expanded={mobileFeaturesOpen}
+              aria-controls="mobile-features-menu"
+            >
+              Funcionalidades
+              <ChevronDown
+                className={`size-4 transition-transform ${mobileFeaturesOpen ? "rotate-180" : ""}`}
+                aria-hidden="true"
+              />
+            </button>
+
+            {mobileFeaturesOpen ? (
+              <div
+                id="mobile-features-menu"
+                className="mb-2 grid gap-5 rounded-2xl border border-border bg-surface/70 p-4"
+              >
+                {featureGroups.map((group) => (
+                  <div key={group.title}>
+                    <p className="border-b border-border pb-2 text-sm font-black text-foreground">
+                      {group.title}
+                    </p>
+                    <div className="mt-2 grid gap-1">
+                      {group.items.map((item) => (
+                        <Link
+                          key={item.slug}
+                          href={getFeatureHref(item.slug)}
+                          onClick={closeMenu}
+                          className="rounded-lg px-2 py-2 text-sm text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+
             {navigation.map((item) => (
               <Link
                 key={item.label}
@@ -176,6 +224,51 @@ export default function Header() {
         </div>
       )}
     </header>
+  );
+}
+
+function DesktopFeaturesMenu() {
+  return (
+    <div className="group relative">
+      <button
+        type="button"
+        className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-surface-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        aria-haspopup="true"
+        aria-controls="desktop-features-menu"
+      >
+        Funcionalidades
+        <ChevronDown
+          className="size-3.5 transition-transform duration-200 group-hover:rotate-180 group-focus-within:rotate-180"
+          aria-hidden="true"
+        />
+      </button>
+
+      <div className="invisible absolute left-1/2 top-full z-50 w-[min(760px,calc(100vw-3rem))] -translate-x-1/2 pt-3 opacity-0 transition duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+        <div
+          id="desktop-features-menu"
+          className="grid grid-cols-3 gap-5 rounded-2xl border border-border bg-background/98 p-5 shadow-2xl shadow-pine-teal-100/15 backdrop-blur-xl dark:shadow-black/30"
+        >
+          {featureGroups.map((group) => (
+            <div key={group.title} className="min-w-0">
+              <p className="border-b border-border px-2 pb-3 text-sm font-black text-foreground">
+                {group.title}
+              </p>
+              <div className="mt-2 grid gap-1">
+                {group.items.map((item) => (
+                  <Link
+                    key={item.slug}
+                    href={getFeatureHref(item.slug)}
+                    className="rounded-xl px-2 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-surface-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
