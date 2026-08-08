@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="pt-BR">
+  <body style="font-family: Arial, sans-serif; color: #172033; line-height: 1.6">
+    <h2>Defina sua senha de acesso</h2>
+    <p>Seu acesso ao portal NovoCode foi criado.</p>
+    <p>
+      <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery"
+         style="display:inline-block;background:#172033;color:#fff;padding:12px 18px;border-radius:8px;text-decoration:none">
+        Criar minha senha
+      </a>
+    </p>
+    <p>Este link é temporário e só pode ser usado uma vez. Se você não esperava este e-mail, ignore-o.</p>
+  </body>
+</html>

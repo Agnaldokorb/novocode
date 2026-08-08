@@ -5,22 +5,50 @@ import { requireAdmin } from "@/lib/auth/session";
 import { prisma } from "@/lib/prisma";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { clientUserSchema, resetPasswordSchema } from "@/lib/validations/auth";
+import { brazilianPhoneForAuth } from "@/lib/validations/shared";
 import { failureState, validationState, type ActionState } from "@/lib/actions/state";
 import { recordAudit } from "@/lib/audit";
+
+async function sendPasswordSetupEmail(email: string) {
+  try {
+    const { error } = await createSupabaseAdminClient().auth.resetPasswordForEmail(email);
+    if (error) {
+      console.error("sendPasswordSetupEmail", error);
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error("sendPasswordSetupEmail", error);
+    return false;
+  }
+}
 
 export async function createClientUserAction(_: ActionState, formData: FormData): Promise<ActionState> {
   const admin = await requireAdmin();
   const parsed = clientUserSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return validationState(parsed.error);
 
-  const client = await prisma.client.findFirst({ where: { id: parsed.data.clientId, active: true } });
+  const client = await prisma.client.findFirst({
+    where: { id: parsed.data.clientId, active: true },
+    select: { id: true, phone: true },
+  });
   if (!client) return failureState("Cliente inexistente ou inativo.");
+  const phone = brazilianPhoneForAuth(client.phone);
+  if (!phone) {
+    return failureState("Cadastre um telefone brasileiro válido no cliente antes de criar o acesso.");
+  }
 
   const supabase = createSupabaseAdminClient();
   const { data, error } = await supabase.auth.admin.createUser({
     email: parsed.data.email,
+    phone,
     password: parsed.data.password,
     email_confirm: true,
+    user_metadata: {
+      display_name: parsed.data.name,
+      full_name: parsed.data.name,
+      name: parsed.data.name,
+    },
     app_metadata: { role: "CLIENT" },
   });
   if (error || !data.user) return failureState(error?.message ?? "Não foi possível criar o acesso.");
@@ -36,13 +64,20 @@ export async function createClientUserAction(_: ActionState, formData: FormData)
       },
     });
     await recordAudit({ userId: admin.id, action: "USER_CREATED", entity: "User", entityId: user.id });
-    revalidatePath(`/admin/clientes/${parsed.data.clientId}`);
-    return { ok: true, message: "Acesso do cliente criado com sucesso." };
   } catch (dbError) {
     await supabase.auth.admin.deleteUser(data.user.id);
     console.error("createClientUserAction", dbError);
     return failureState("Não foi possível vincular o acesso ao cliente.");
   }
+
+  revalidatePath(`/admin/clientes/${parsed.data.clientId}`);
+  if (!(await sendPasswordSetupEmail(parsed.data.email))) {
+    return {
+      ok: false,
+      message: "O acesso foi criado, mas o Supabase não conseguiu enviar o e-mail de definição de senha. Verifique o SMTP e tente reenviar pelo formulário de redefinição.",
+    };
+  }
+  return { ok: true, message: "Acesso criado e e-mail para definição de senha enviado ao cliente." };
 }
 
 export async function resetClientPasswordAction(_: ActionState, formData: FormData): Promise<ActionState> {
@@ -56,7 +91,10 @@ export async function resetClientPasswordAction(_: ActionState, formData: FormDa
   });
   if (error) return failureState("Não foi possível redefinir a senha.");
   await recordAudit({ userId: admin.id, action: "USER_PASSWORD_RESET", entity: "User", entityId: user.id });
-  return { ok: true, message: "Senha temporária atualizada." };
+  if (!(await sendPasswordSetupEmail(user.email))) {
+    return failureState("A senha temporária foi atualizada, mas o Supabase não conseguiu enviar o e-mail de definição de senha.");
+  }
+  return { ok: true, message: "Senha temporária atualizada e e-mail de definição de senha reenviado." };
 }
 
 export async function toggleClientUserAction(id: string) {

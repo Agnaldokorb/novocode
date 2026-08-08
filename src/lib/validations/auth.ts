@@ -19,3 +19,16 @@ export const resetPasswordSchema = z.object({
   userId: z.string().uuid(),
   password: z.string().min(12).max(72),
 });
+
+export const updatePasswordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(12, "A nova senha deve ter ao menos 12 caracteres.")
+      .max(72),
+    confirmPassword: z.string(),
+  })
+  .refine(({ password, confirmPassword }) => password === confirmPassword, {
+    message: "As senhas não coincidem.",
+    path: ["confirmPassword"],
+  });

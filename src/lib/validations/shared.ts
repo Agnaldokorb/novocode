@@ -15,3 +15,19 @@ export function optionalDate(value: FormDataEntryValue | null) {
 export function digits(value: string) {
   return value.replace(/\D/g, "");
 }
+
+export function brazilianPhoneForAuth(value: string | null | undefined) {
+  if (!value) return null;
+  const internationalInput = value.trim().startsWith("+");
+
+  let phone = digits(value);
+  if (internationalInput && !phone.startsWith("55")) return null;
+  if (phone.startsWith("0") && (phone.length === 11 || phone.length === 12)) {
+    phone = phone.slice(1);
+  }
+  if (phone.length === 10 || phone.length === 11) phone = `55${phone}`;
+
+  return phone.startsWith("55") && (phone.length === 12 || phone.length === 13)
+    ? phone
+    : null;
+}
