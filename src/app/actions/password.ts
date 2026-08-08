@@ -5,6 +5,29 @@ import { failureState, validationState, type ActionState } from "@/lib/actions/s
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { updatePasswordSchema } from "@/lib/validations/auth";
 
+export async function confirmPasswordRecoveryAction(formData: FormData) {
+  const tokenHash = formData.get("tokenHash");
+  if (typeof tokenHash !== "string" || tokenHash.length < 32 || tokenHash.length > 512) {
+    redirect("/login?recoveryError=1");
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.auth.verifyOtp({
+    token_hash: tokenHash,
+    type: "recovery",
+  });
+  if (error) {
+    console.error("confirmPasswordRecoveryAction", {
+      code: error.code,
+      status: error.status,
+      message: error.message,
+    });
+    redirect("/login?recoveryError=1");
+  }
+
+  redirect("/redefinir-senha");
+}
+
 export async function updateRecoveredPasswordAction(
   _: ActionState,
   formData: FormData,
